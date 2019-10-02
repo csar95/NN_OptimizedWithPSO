@@ -2,3 +2,5 @@
 *.iml
 *.pyc
 *.pdf
+.idea/
+__pycache__/
