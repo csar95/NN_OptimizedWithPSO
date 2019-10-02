@@ -41,3 +41,5 @@ class NN_Solution:
     def choose_neighborhood_best(self):
         # TODO: A particle knows the fitness of those in its neighborhood, and uses the position of the fittest
         pass
+
+
