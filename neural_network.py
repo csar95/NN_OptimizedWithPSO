@@ -24,7 +24,17 @@ class NeuralNetwork:
         self.layers_activation.append(activation)
 
     def set_weights(self, pso_array):
-        pass
+        temp = pso_array.copy()
+        for layer in range(len(self.layers_weights)):
+            for weights in range(len(self.layers_weights[layer])):
+                for weight in range(len(self.layers_weights[layer][weights])):
+                    self.layers_weights[layer][weights][weight] = temp[0]
+                    temp.pop(0)
+        for layer in range(len(self.layers_biases)):
+            for biases in range(len(self.layers_biases[layer])):
+                for bias in range(len(self.layers_biases[layer][biases])):
+                    self.layers_biases[layer][biases][bias] = temp[0]
+                    temp.pop(0)
 
     def feed_forward(self, inputs):
         layer_inputs = inputs
