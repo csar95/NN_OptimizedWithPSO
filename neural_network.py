@@ -37,7 +37,7 @@ class NeuralNetwork:
                     temp.pop(0)
 
     def feed_forward(self, inputs):
-        layer_inputs = inputs
+        layer_inputs = np.reshape(inputs, newshape=(-1, 1))
         for i in range(len(self.layers_weights)):
             # Calculating the layer outputs
             layer_outputs = np.dot(self.layers_weights[i], layer_inputs)

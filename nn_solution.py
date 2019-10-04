@@ -1,4 +1,5 @@
 import numpy as np
+from neural_network import *
 
 
 class NN_Solution:
@@ -16,7 +17,15 @@ class NN_Solution:
         self.gBest = np.random.uniform(-1, 1, size=(1, particleSize))  # Neighborhood best position
         self.gBestFitness = .0
 
-    def calculate_fitness(self):
+    def calculate_fitness(self, nn, x_train):
+        nn.set_weights(self.position)
+
+        y_preds = np.array([])
+
+        for x in x_train:
+            y_pred = nn.feed_forward(x)
+            y_preds = np.append(y_preds, y_pred)
+
         # TODO: Calculate fitness value based on Neural Network feed-forward alg. and cost error
         # TODO: If the fitness value is better than its personal best set current value as the new pBest
         pass
