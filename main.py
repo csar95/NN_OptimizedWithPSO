@@ -47,6 +47,7 @@ nn.add(1, activation='gaussian')
 # print(nn.layers_biases)
 nn.feed_forward([1,2])
 
+
 '''
 nn = NeuralNetwork([1, 3, 4, 1])
 
