@@ -13,22 +13,26 @@ class NN_Solution:
         # TODO: self.velMax
         self.fitness = .0
         self.pBest = np.random.uniform(-1, 1, size=(1, particleSize))  # Personal best position
-        self.pBestFitness = .0
+        self.pBestFitness = 999999999.9
         self.gBest = np.random.uniform(-1, 1, size=(1, particleSize))  # Neighborhood best position
-        self.gBestFitness = .0
+        self.gBestFitness = 999999999.9
 
-    def calculate_fitness(self, nn, x_train):
-        nn.set_weights(self.position)
+    def calculate_fitness(self, nn, x_train, y_train):
+        # Updates fitness value based on Neural Network feed-forward alg. and cost error
+        nn.set_weights(self.position[0])
 
-        y_preds = np.array([])
+        mse = .0
+        for i, x in enumerate(x_train):
+            y_pred = nn.feed_forward(x)[0]
+            mse += ((y_train[i] - y_pred[0]) ** 2)
 
-        for x in x_train:
-            y_pred = nn.feed_forward(x)
-            y_preds = np.append(y_preds, y_pred)
+        mse /= len(x_train)
+        print(mse)
+        self.fitness = mse
 
-        # TODO: Calculate fitness value based on Neural Network feed-forward alg. and cost error
-        # TODO: If the fitness value is better than its personal best set current value as the new pBest
-        pass
+        # If the fitness value is better than its personal best set current value as the new pBest
+        if self.fitness < self.pBestFitness:
+            self.pBest = self.position
 
     def update_velocity(self, c1, c2):
         # TODO: Make sure this is the correct formula

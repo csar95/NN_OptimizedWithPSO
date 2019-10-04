@@ -4,6 +4,7 @@ from neural_network import *
 
 dataFile = 'Data/1in_linear.txt'
 # dataFile = 'Data/1in_sine.txt'
+# dataFile = 'Data/2in_complex.txt'
 
 file = open(dataFile, 'rt')
 
@@ -16,11 +17,10 @@ for line in file:
 
 
 nn = NeuralNetwork()
-nn.add(4, input_shape=2, activation='sigmoid')
+nn.add(4, input_shape=1, activation='sigmoid')
 nn.add(1, activation='gaussian')
 
-layerStructure = [2, 4, 1]
-pso = PSO(layerStructure)
+pso = PSO(nn)
 
 pso.generate_initial_population()
 
@@ -29,7 +29,7 @@ iter = 0
 while iter < 500 and not pso.stop():
     # Calculate fitness of each particle
     for particle in pso.population:
-        particle.calculate_fitness(nn, X_train)
+        particle.calculate_fitness(nn, X_train, y_train)
 
     # Choose the particle with the best fitness value of all as gBest for each particle
     for particle in pso.population:

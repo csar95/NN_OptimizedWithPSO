@@ -24,7 +24,7 @@ class NeuralNetwork:
         self.layers_activation.append(activation)
 
     def set_weights(self, pso_array):
-        temp = pso_array.copy()
+        temp = list(pso_array.copy())
         for layer in range(len(self.layers_weights)):
             for weights in range(len(self.layers_weights[layer])):
                 for weight in range(len(self.layers_weights[layer][weights])):

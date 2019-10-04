@@ -1,4 +1,4 @@
-from nn_solution import *
+from nn_particle import *
 import numpy as np
 
 
@@ -10,10 +10,11 @@ class PSO:
     importancePBest = 1.5  # Self confidence factor
     importanceGBest = 2.5  # Swarm confidence factor
 
-    def __init__(self, layers):
+    def __init__(self, nn):
         self.particleSize = 0
-        for i in range(1, len(layers)):
-            self.particleSize += (layers[i] * layers[i-1])  # (layers[i] * (layers[i-1] + 1)) If we consider biases
+
+        for matrix in nn.layers_weights:
+            self.particleSize += (matrix.shape[0] * (matrix.shape[1] + 1))
 
         self.population = np.array([], dtype=object)  # Initialize empty population
 
