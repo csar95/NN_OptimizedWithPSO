@@ -15,7 +15,6 @@ for line in file:
     X_train = np.append(X_train, [float(coordinates[0])], axis=0)
     y_train = np.append(y_train, [float(coordinates[1])], axis=0)
 
-
 nn = NeuralNetwork()
 nn.add(4, input_shape=1, activation='sigmoid')
 nn.add(1, activation='gaussian')
