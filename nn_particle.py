@@ -1,4 +1,5 @@
 import numpy as np
+import math
 from neural_network import *
 
 
@@ -33,6 +34,7 @@ class NN_Solution:
         # If the fitness value is better than its personal best set current value as the new pBest
         if self.fitness < self.pBestFitness:
             self.pBest = self.position
+            self.pBestFitness = self.fitness
 
     def update_velocity(self, c1, c2):
         # TODO: Make sure this is the correct formula
@@ -51,8 +53,8 @@ class NN_Solution:
     def update_position(self):
         self.position = np.add(self.position, self.velocity)
 
-    def choose_neighborhood_best(self):
-        # TODO: A particle knows the fitness of those in its neighborhood, and uses the position of the fittest
-        pass
-
-
+    def euclidean_distance(self, particle):
+        distance = .0
+        for i in range(self.position.size):
+            distance += (self.position[0][i] - particle.position[0][i])**2
+        return math.sqrt(distance)

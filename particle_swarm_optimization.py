@@ -24,6 +24,31 @@ class PSO:
             particle = NN_Solution(self.particleSize)
             self.population = np.append(self.population, [particle], axis=0)
 
+    def update_neighborhood_best(self):
+        for particle_idx in range(self.populationSize):
+            # Choose neighbors based on euclidean distance
+            neighborsIndeces = [(index, 999999999.9) for index in range(self.neighborhood)]
+
+            # Calculate distance from one particle to the others
+            for j in range(self.populationSize):
+                if particle_idx != j:
+                    distance = self.population[particle_idx].euclidean_distance(self.population[j])
+                    for n in range(len(neighborsIndeces)):
+
+                        # If distance is less than any of the particles in neighborsIndeces replace index and continue
+                        if distance < neighborsIndeces[n][1]:
+                            neighborsIndeces.insert(n, (j, distance))  # FILO
+                            neighborsIndeces.pop()
+                            break
+
+            # Among those neighbor particles update our particle's gBest with the pBest of the fittest
+            fittestNeighbor = (-1, 999999999.9)  # (index, pbest)
+            for neighbor in neighborsIndeces:
+                if self.population[neighbor[0]].pBestFitness < fittestNeighbor[1]:
+                    fittestNeighbor = (neighbor[0], self.population[neighbor[0]].pBestFitness)
+            self.population[particle_idx].gBest = self.population[fittestNeighbor[0]].pBest
+            self.population[particle_idx].gBestFitness = self.population[fittestNeighbor[0]].pBestFitness
+
     def stop(self):
         # TODO: Compare all gBest and consider whether the solution is good enough or not
         return False

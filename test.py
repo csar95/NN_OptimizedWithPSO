@@ -32,12 +32,11 @@ while iter < 500 and not pso.stop():
         particle.calculate_fitness(nn, X_train, y_train)
 
     # Choose the particle with the best fitness value of all as gBest for each particle
-    for particle in pso.population:
-        particle.choose_neighborhood_best()
+    pso.update_neighborhood_best()
 
-    # Update velocity and position for each particle
-    for particle in pso.population:
-        particle.update_velocity(pso.importancePBest, pso.importanceGBest)
-        particle.update_position()
-
+#     # Update velocity and position for each particle
+#     for particle in pso.population:
+#         particle.update_velocity(pso.importancePBest, pso.importanceGBest)
+#         particle.update_position()
+#
     iter += 1
