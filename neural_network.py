@@ -3,37 +3,46 @@ import numpy as np
 
 class NeuralNetwork:
 
-    learningRate = .1
+    activation_functions = ('null', 'sigmoid', 'hyperbolic_tangent', 'cosine', 'gaussian')
 
-    # It creates an empty NN unless you give it the Matrix
     def __init__(self):
         self.layers_weights = []
         self.layers_biases = []
         self.layers_activation = []
 
     # activation can be: {null, sigmoid, hyperbolic_tangent, cosine, gaussian}
-    def add(self, neurons, input_shape=None, activation='sigmoid'):
+    def add(self, neurons, input_shape=None):
         if not self.layers_weights:
-            matrix = np.random.uniform(-1, 1, size=(neurons, input_shape))
+            weights = np.random.uniform(-1, 1, size=(neurons, input_shape))
         else:
             #                                               Number of rows in the previous layer
-            matrix = np.random.uniform(-1, 1, size=(neurons, self.layers_weights[-1][:, 0].size))
+            weights = np.random.uniform(-1, 1, size=(neurons, self.layers_weights[-1][:, 0].size))
         bias = np.random.uniform(-1, 1, size=(neurons, 1))
-        self.layers_weights.append(matrix)
+        activation = np.random.choice(self.activation_functions, size=(neurons, 1))
+        self.layers_weights.append(weights)
         self.layers_biases.append(bias)
         self.layers_activation.append(activation)
 
-    def set_weights(self, pso_array):
+    def set_parameters(self, pso_array, pso_activation):
+        # Sets the weights for each neuron
         temp = list(pso_array.copy())
         for layer in range(len(self.layers_weights)):
             for weights in range(len(self.layers_weights[layer])):
                 for weight in range(len(self.layers_weights[layer][weights])):
                     self.layers_weights[layer][weights][weight] = temp[0]
                     temp.pop(0)
+        # Sets the bias for each neuron
         for layer in range(len(self.layers_biases)):
             for biases in range(len(self.layers_biases[layer])):
                 for bias in range(len(self.layers_biases[layer][biases])):
                     self.layers_biases[layer][biases][bias] = temp[0]
+                    temp.pop(0)
+        # Sets the activation function for each neuron
+        temp = list(pso_activation.copy())
+        for layer in range(len(self.layers_activation)):
+            for activations in range(len(self.layers_activation[layer])):
+                for activation in range(len(self.layers_activation[layer][activations])):
+                    self.layers_activation[layer][activations][activation] = temp[0]
                     temp.pop(0)
 
     def feed_forward(self, inputs):

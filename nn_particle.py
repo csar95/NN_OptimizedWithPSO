@@ -20,7 +20,7 @@ class NN_Solution:
 
     def calculate_fitness(self, nn, x_train, y_train):
         # Updates fitness value based on Neural Network feed-forward alg. and cost error
-        nn.set_weights(self.position[0])
+        nn.set_parameters(self.position[0])
 
         mse = .0
         for i, x in enumerate(x_train):
