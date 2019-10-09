@@ -56,8 +56,7 @@ for line in file:
     y_train = np.append(y_train, [float(coordinates[1])], axis=0)
 
 nn = NeuralNetwork()
-nn.add(4, input_shape=1, activation='sigmoid')
-nn.add(3, activation='cosine')
+nn.add(3, input_shape=1, activation='sigmoid')
 nn.add(1, activation='hyperbolic_tangent')
 
 pso = PSO(nn)
