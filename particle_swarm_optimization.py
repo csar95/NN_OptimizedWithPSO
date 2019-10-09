@@ -11,17 +11,19 @@ class PSO:
     importanceGBest = 1  # Swarm confidence factor
 
     def __init__(self, nn):
-        self.particleSize = 0
+        self.numWeightsBiases = 0
+        self.numNeurons = 0
 
         for matrix in nn.layers_weights:
-            self.particleSize += (matrix.shape[0] * (matrix.shape[1] + 1))
+            self.numWeightsBiases += (matrix.shape[0] * (matrix.shape[1] + 1))
+            self.numNeurons += matrix.shape[0]
 
         self.population = np.array([], dtype=object)  # Initialize empty population
 
     def generate_initial_population(self):
         # Initialize particles randomly
         for _ in range(self.populationSize):
-            particle = NN_Solution(self.particleSize)
+            particle = NN_Solution(self.numWeightsBiases, self.numNeurons)
             self.population = np.append(self.population, [particle], axis=0)
 
     def update_neighborhood_best(self):
@@ -57,7 +59,7 @@ class PSO:
                 gBest_idx = particle_idx
                 gBest_fitness = self.population[particle_idx].pBestFitness
         print(gBest_fitness)
-        return self.population[gBest_idx].pBest[0]
+        return self.population[gBest_idx].pBest
 
     def stop(self):
         # TODO: Compare all gBest and consider whether the solution is good enough or not
