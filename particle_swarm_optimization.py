@@ -4,11 +4,11 @@ import numpy as np
 
 class PSO:
 
-    populationSize = 20
-    neighborhood = 3
+    populationSize = 40
+    neighborhood = 5
     # Sum should be equal 4 and not critical for PSO’s convergence and alleviation of local minimum
-    importancePBest = 1.5  # Self confidence factor
-    importanceGBest = 2.5  # Swarm confidence factor
+    importancePBest = 3  # Self confidence factor
+    importanceGBest = 1  # Swarm confidence factor
 
     def __init__(self, nn):
         self.particleSize = 0
@@ -48,6 +48,16 @@ class PSO:
                     fittestNeighbor = (neighbor[0], self.population[neighbor[0]].pBestFitness)
             self.population[particle_idx].gBest = self.population[fittestNeighbor[0]].pBest
             self.population[particle_idx].gBestFitness = self.population[fittestNeighbor[0]].pBestFitness
+
+    def find_global_best(self):
+        gBest_idx = -1
+        gBest_fitness = 999999999.9
+        for particle_idx in range(self.populationSize):
+            if self.population[particle_idx].pBestFitness < gBest_fitness:
+                gBest_idx = particle_idx
+                gBest_fitness = self.population[particle_idx].pBestFitness
+        print(gBest_fitness)
+        return self.population[gBest_idx].pBest[0]
 
     def stop(self):
         # TODO: Compare all gBest and consider whether the solution is good enough or not

@@ -28,7 +28,6 @@ class NN_Solution:
             mse += ((y_train[i] - y_pred[0]) ** 2)
 
         mse /= len(x_train)
-        print(mse)
         self.fitness = mse
 
         # If the fitness value is better than its personal best set current value as the new pBest
