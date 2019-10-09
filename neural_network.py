@@ -23,7 +23,7 @@ class NeuralNetwork:
         self.layers_biases.append(bias)
         self.layers_activation.append(activation)
 
-    def set_parameters(self, pso_array, pso_activation):
+    def set_parameters(self, pso_array, pso_activation=None):
         # Sets the weights for each neuron
         temp = list(pso_array.copy())
         for layer in range(len(self.layers_weights)):
@@ -38,12 +38,13 @@ class NeuralNetwork:
                     self.layers_biases[layer][biases][bias] = temp[0]
                     temp.pop(0)
         # Sets the activation function for each neuron
-        temp = list(pso_activation.copy())
-        for layer in range(len(self.layers_activation)):
-            for activations in range(len(self.layers_activation[layer])):
-                for activation in range(len(self.layers_activation[layer][activations])):
-                    self.layers_activation[layer][activations][activation] = temp[0]
-                    temp.pop(0)
+        if pso_activation:
+            temp = list(pso_activation.copy())
+            for layer in range(len(self.layers_activation)):
+                for activations in range(len(self.layers_activation[layer])):
+                    for activation in range(len(self.layers_activation[layer][activations])):
+                        self.layers_activation[layer][activations][activation] = temp[0]
+                        temp.pop(0)
 
     def feed_forward(self, inputs):
         layer_inputs = np.reshape(inputs, newshape=(-1, 1))
@@ -52,25 +53,34 @@ class NeuralNetwork:
             layer_outputs = np.dot(self.layers_weights[i], layer_inputs)
             layer_outputs = np.add(layer_outputs, self.layers_biases[i])
             # Activation function
-            if self.layers_activation[i] == 'null':
-                self.map(self.null, layer_outputs)
-            elif self.layers_activation[i] == 'sigmoid':
-                self.map(self.sigmoid, layer_outputs)
-            elif self.layers_activation[i] == 'hyperbolic_tangent':
-                self.map(self.hyperbolic_tangent, layer_outputs)
-            elif self.layers_activation[i] == 'cosine':
-                self.map(self.cosine, layer_outputs)
-            elif self.layers_activation[i] == 'gaussian':
-                self.map(self.gaussian, layer_outputs)
+            self.map(self.layers_activation[i], layer_outputs)
+            # for j in range(len(self.layers_activation[i])):
+            #     if self.layers_activation[i][j] == 'null':
+            #         layer_outputs[j] = self.null(layer_outputs[j])
+            #     elif self.layers_activation[i][j] == 'sigmoid':
+            #         layer_outputs[j] = self.sigmoid(layer_outputs[j])
+            #     elif self.layers_activation[i][j] == 'hyperbolic_tangent':
+            #         layer_outputs[j] = self.hyperbolic_tangent(layer_outputs[j])
+            #     elif self.layers_activation[i][j] == 'cosine':
+            #         layer_outputs[j] = self.cosine(layer_outputs[j])
+            #     elif self.layers_activation[i][j] == 'gaussian':
+            #         layer_outputs[j] = self.gaussian(layer_outputs[j])
             # This layer's outputs will be the inputs for the next layer
             layer_inputs = layer_outputs
         return layer_outputs
 
-    @staticmethod
-    def map(func, inputs):
-        for i in range(inputs.size):
-            for j in range(inputs[i].size):
-                inputs[i][j] = func(inputs[i][j])
+    def map(self, activations, inputs):
+        for i in range(len(activations)):
+            if activations[i] == 'null':
+                inputs[i] = self.null(inputs[i])
+            elif activations[i] == 'sigmoid':
+                inputs[i] = self.sigmoid(inputs[i])
+            elif activations[i] == 'hyperbolic_tangent':
+                inputs[i] = self.hyperbolic_tangent(inputs[i])
+            elif activations[i] == 'cosine':
+                inputs[i] = self.cosine(inputs[i])
+            elif activations[i] == 'gaussian':
+                inputs[i] = self.gaussian(inputs[i])
 
     @staticmethod
     def null(x):

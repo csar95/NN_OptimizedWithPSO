@@ -25,7 +25,7 @@ def draw_graph(j):
             particle.update_position()
 
     global_best = pso.find_global_best()
-    nn.set_weights(global_best)
+    nn.set_parameters(global_best)
     y_preds = np.array([])
     for x in X_train:
         y_pred = nn.feed_forward(np.array(x))[0]
@@ -56,9 +56,16 @@ for line in file:
     y_train = np.append(y_train, [float(coordinates[1])], axis=0)
 
 nn = NeuralNetwork()
-nn.add(4, input_shape=1, activation='sigmoid')
-nn.add(3, activation='cosine')
-nn.add(1, activation='hyperbolic_tangent')
+nn.add(4, input_shape=1)
+nn.add(6)
+nn.add(1)
+pso_array = [0.3, 0.1, -0.5, -0.2, 0.3, 0.1, -0.5, -0.2, 0.3, 0.1, -0.5, 0.1, -0.5, -0.2, -0.2, 0.3, 0.1,
+             -0.5, 0.1, -0.5, -0.2, 0.1, -0.5, -0.2, 0.1, -0.5, -0.2, 0.1, -0.5, -0.2, -0.2, 0.1, -0.5,
+             -0.2, 0.1, -0.5, -0.2, 0.1, -0.5, -0.5, -0.2, 0.3, -0.5, -0.2, 0.3, -0.2, 0.1, -0.5, -0.2, 0.6]
+pso_activation = ['hyperbolic_tangent', 'hyperbolic_tangent', 'hyperbolic_tangent', 'hyperbolic_tangent',
+                  'hyperbolic_tangent', 'hyperbolic_tangent', 'hyperbolic_tangent', 'hyperbolic_tangent',
+                  'hyperbolic_tangent', 'hyperbolic_tangent', 'hyperbolic_tangent']
+nn.set_parameters(pso_array=pso_array, pso_activation=pso_activation)
 
 pso = PSO(nn)
 
