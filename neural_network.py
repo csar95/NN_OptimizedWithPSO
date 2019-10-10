@@ -54,17 +54,6 @@ class NeuralNetwork:
             layer_outputs = np.add(layer_outputs, self.layers_biases[i])
             # Activation function
             self.map(self.layers_activation[i], layer_outputs)
-            # for j in range(len(self.layers_activation[i])):
-            #     if self.layers_activation[i][j] == 'null':
-            #         layer_outputs[j] = self.null(layer_outputs[j])
-            #     elif self.layers_activation[i][j] == 'sigmoid':
-            #         layer_outputs[j] = self.sigmoid(layer_outputs[j])
-            #     elif self.layers_activation[i][j] == 'hyperbolic_tangent':
-            #         layer_outputs[j] = self.hyperbolic_tangent(layer_outputs[j])
-            #     elif self.layers_activation[i][j] == 'cosine':
-            #         layer_outputs[j] = self.cosine(layer_outputs[j])
-            #     elif self.layers_activation[i][j] == 'gaussian':
-            #         layer_outputs[j] = self.gaussian(layer_outputs[j])
             # This layer's outputs will be the inputs for the next layer
             layer_inputs = layer_outputs
         return layer_outputs
