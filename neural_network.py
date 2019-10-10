@@ -76,37 +76,17 @@ class NeuralNetwork:
         return 0
 
     @staticmethod
-    def derivative_null(x):
-        return 0
-
-    @staticmethod
     def sigmoid(x):
         return 1 / (1 + np.exp(-x))
-
-    @staticmethod
-    def derivative_sigmoid(x):
-        return x * (1 - x)
 
     @staticmethod
     def hyperbolic_tangent(x):
         return (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x))
 
     @staticmethod
-    def derivative_hyperbolic_tangent(x):
-        return 1 - (x**2)
-
-    @staticmethod
     def cosine(x):
         return np.cos(x)
 
     @staticmethod
-    def derivative_cosine(x):
-        return -np.sin(x)
-
-    @staticmethod
     def gaussian(x):
         return np.exp(-(x**2))
-
-    @staticmethod
-    def derivative_gaussian(x):
-        return -2 * x * np.exp(-(x**2))
