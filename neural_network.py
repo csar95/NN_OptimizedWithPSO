@@ -3,7 +3,7 @@ import numpy as np
 
 class NeuralNetwork:
 
-    activation_functions = ('null', 'sigmoid', 'hyperbolic_tangent', 'cosine', 'gaussian')
+    # activation_functions = {1: 'null', 2: 'sigmoid', 3: 'hyperbolic_tangent', 4: 'cosine', 5: 'gaussian'}
 
     def __init__(self):
         self.layers_weights = []
@@ -18,12 +18,12 @@ class NeuralNetwork:
             #                                               Number of rows in the previous layer
             weights = np.random.uniform(-1, 1, size=(neurons, self.layers_weights[-1][:, 0].size))
         bias = np.random.uniform(-1, 1, size=(neurons, 1))
-        activation = np.random.choice(self.activation_functions, size=(neurons, 1))
+        activation = np.random.randint(1, 6, size=(neurons, 1))
         self.layers_weights.append(weights)
         self.layers_biases.append(bias)
         self.layers_activation.append(activation)
 
-    def set_parameters(self, pso_array, pso_activation=None):
+    def set_parameters(self, pso_array):
         # Sets the weights for each neuron
         temp = list(pso_array.copy())
         for layer in range(len(self.layers_weights)):
@@ -38,13 +38,11 @@ class NeuralNetwork:
                     self.layers_biases[layer][biases][bias] = temp[0]
                     temp.pop(0)
         # Sets the activation function for each neuron
-        if pso_activation:
-            temp = list(pso_activation.copy())
-            for layer in range(len(self.layers_activation)):
-                for activations in range(len(self.layers_activation[layer])):
-                    for activation in range(len(self.layers_activation[layer][activations])):
-                        self.layers_activation[layer][activations][activation] = temp[0]
-                        temp.pop(0)
+        for layer in range(len(self.layers_activation)):
+            for activations in range(len(self.layers_activation[layer])):
+                for activation in range(len(self.layers_activation[layer][activations])):
+                    self.layers_activation[layer][activations][activation] = int(temp[0])
+                    temp.pop(0)
 
     def feed_forward(self, inputs):
         layer_inputs = np.reshape(inputs, newshape=(-1, 1))
@@ -60,16 +58,18 @@ class NeuralNetwork:
 
     def map(self, activations, inputs):
         for i in range(len(activations)):
-            if activations[i] == 'null':
+            if activations[i] == 1:
                 inputs[i] = self.null(inputs[i])
-            elif activations[i] == 'sigmoid':
+            elif activations[i] == 2:
                 inputs[i] = self.sigmoid(inputs[i])
-            elif activations[i] == 'hyperbolic_tangent':
+            elif activations[i] == 3:
                 inputs[i] = self.hyperbolic_tangent(inputs[i])
-            elif activations[i] == 'cosine':
+            elif activations[i] == 4:
                 inputs[i] = self.cosine(inputs[i])
-            elif activations[i] == 'gaussian':
+            elif activations[i] == 5:
                 inputs[i] = self.gaussian(inputs[i])
+            else:
+                print('ERROR: Activation function not in range from 1 to 5!')
 
     @staticmethod
     def null(x):
