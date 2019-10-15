@@ -57,15 +57,8 @@ for line in file:
 
 nn = NeuralNetwork()
 nn.add(4, input_shape=1)
-nn.add(6)
+nn.add(3)
 nn.add(1)
-pso_array = [0.3, 0.1, -0.5, -0.2, 0.3, 0.1, -0.5, -0.2, 0.3, 0.1, -0.5, 0.1, -0.5, -0.2, -0.2, 0.3, 0.1,
-             -0.5, 0.1, -0.5, -0.2, 0.1, -0.5, -0.2, 0.1, -0.5, -0.2, 0.1, -0.5, -0.2, -0.2, 0.1, -0.5,
-             -0.2, 0.1, -0.5, -0.2, 0.1, -0.5, -0.5, -0.2, 0.3, -0.5, -0.2, 0.3, -0.2, 0.1, -0.5, -0.2, 0.6]
-pso_activation = ['hyperbolic_tangent', 'hyperbolic_tangent', 'hyperbolic_tangent', 'hyperbolic_tangent',
-                  'hyperbolic_tangent', 'hyperbolic_tangent', 'hyperbolic_tangent', 'hyperbolic_tangent',
-                  'hyperbolic_tangent', 'hyperbolic_tangent', 'hyperbolic_tangent']
-nn.set_parameters(pso_array=pso_array, pso_activation=pso_activation)
 
 pso = PSO(nn)
 

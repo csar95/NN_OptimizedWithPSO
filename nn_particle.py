@@ -1,6 +1,5 @@
 import numpy as np
 import math
-import random
 from neural_network import *
 
 
@@ -12,12 +11,13 @@ class NN_Solution:
     # TODO: Inertia factor for velocity
 
     def __init__(self, numWeightsBiases, numNeurons):
+        self.numNeurons = numNeurons
         self.length = numWeightsBiases + numNeurons
         self.fitness = .0
         self.position = np.random.uniform(-1, 1, size=numWeightsBiases)
         # Add the activation func. component correspondent to each neuron
         for _ in range(numNeurons):
-            self.position = np.append(self.position, [float(random.randint(1, 5))])
+            self.position = np.append(self.position, [float(np.random.randint(1, 6))])
 
         # As particles gain velocity throughout a run, they tend to leave the search space, initializing the velocities
         # to 0 lowers the chances of this happening,
@@ -33,7 +33,7 @@ class NN_Solution:
 
     def calculate_fitness(self, nn, x_train, y_train):
         # Updates fitness value based on Neural Network feed-forward alg. and cost error
-        nn.set_parameters(self.position[0])
+        nn.set_parameters(self.position)
 
         mse = .0
         for i, x in enumerate(x_train):
@@ -61,11 +61,35 @@ class NN_Solution:
 
         # TODO: Consider inertia
         self.velocity = np.add(self.velocity, velVariation)
-        # TODO: Consider max velocity. If exceeded, limit to velMax
 
-    # TODO: See https://www.researchgate.net/publication/224613555_A_Hybrid_Boundary_Condition_for_Robust_Particle_Swarm_Optimization for solution outside the search space
+        # Limit velocity if it exceeds vMax
+        for i in range(len(self.velocity)):
+            # TODO: Consider different vMax for the biases
+            # Weights and biases
+            if i < self.length - self.numNeurons:
+                if self.velocity[i] > self.vMax_WB:
+                    self.velocity[i] = self.vMax_WB
+                elif self.velocity[i] < -self.vMax_WB:
+                    self.velocity[i] = -self.vMax_WB
+            # Activation function
+            else:
+                if self.velocity[i] > self.vMax_ActFunc:
+                    self.velocity[i] = self.vMax_ActFunc
+                elif self.velocity[i] < -self.vMax_ActFunc:
+                    self.velocity[i] = -self.vMax_ActFunc
+
+    # See https://www.researchgate.net/publication/224613555_A_Hybrid_Boundary_Condition_for_Robust_Particle_Swarm_Optimization for solution outside the search space
     def update_position(self):
         self.position = np.add(self.position, self.velocity)
+        for i in range(len(self.position)):
+            # Activation function - Absorbing walls
+            if i >= self.length - self.numNeurons:
+                if self.position[i] >= 6:
+                    self.position[i] = 5. - (self.position[i] - 5.)
+                    self.velocity[i] = -self.velocity[i]
+                elif self.position[i] < 1:
+                    self.position[i] = 1. + (1. - self.position[i])
+                    self.velocity[i] = -self.velocity[i]
 
     def euclidean_distance(self, particle):
         distance = .0
