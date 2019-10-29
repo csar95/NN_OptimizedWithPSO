@@ -54,12 +54,13 @@ class PSO:
     def find_global_best(self):
         gBest_idx = -1
         gBest_fitness = 999999999.9
+
         for particle_idx in range(self.populationSize):
             if self.population[particle_idx].pBestFitness < gBest_fitness:
                 gBest_idx = particle_idx
                 gBest_fitness = self.population[particle_idx].pBestFitness
-        print(gBest_fitness)
-        return self.population[gBest_idx].pBest
+
+        return self.population[gBest_idx]
 
     def stop(self):
         # TODO: Compare all gBest and consider whether the solution is good enough or not

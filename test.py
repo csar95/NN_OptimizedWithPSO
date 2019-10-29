@@ -6,15 +6,20 @@ import matplotlib.animation as ani
 
 def draw_graph(j):
 
-    global step, nn, pso
+    global step, nn, pso, aux, min_error
 
-    if step % 25 == 0:
-        print(step)
+    time_step.append([step])
+
+    if step % 50 == 0:
+        print(f'Step: {step} - Minimum error found so far: {min_error}')
 
     if step > 0:
         # Calculate fitness of each particle
         for particle in pso.population:
-            particle.calculate_fitness(nn, X_train, y_train)
+            np.random.shuffle(aux)
+            X = [elem[0] for elem in aux[:30]]
+            y = [elem[1] for elem in aux[:30]]
+            particle.calculate_fitness(nn, X, y)
 
         # Choose the particle with the best fitness value of all as gBest for each particle
         pso.update_neighborhood_best()
@@ -25,25 +30,44 @@ def draw_graph(j):
             particle.update_position()
 
     global_best = pso.find_global_best()
-    nn.set_parameters(global_best)
+
+    best_error = global_best.pBestFitness
+    error_historical.append(best_error)
+    min_error = best_error if best_error < min_error else min_error
+
+    nn.set_parameters(global_best.pBest)
     y_preds = np.array([])
     for x in X_train:
         y_pred = nn.feed_forward(np.array(x))[0]
         y_preds = np.append(y_preds, y_pred)
 
-    training_data.cla()
-    training_data.plot(X_train, y_train, color='blue')
-    predicted_data.plot(X_train, y_preds, color='green')
+    function.cla()
+    function.title.set_text('Function approximation')
+    function.set_xlim([-1, 1])
+    function.set_ylim([-1, 1])
+    function.plot(X_train, y_train, color='blue', label='Desired output')
+    function.plot(X_train, y_preds, color='green', label='ANN output')
+    function.legend(loc='upper left')
+    function.grid(True)
 
-    if step == 500:
+    error.cla()
+    error.title.set_text('Mean squared error')
+    error.set_xlabel('Num. of iterations')
+    error.set_ylabel('Error')
+    error.set_ylim([0, .225])
+    error.plot(time_step, error_historical, color='red')
+
+    if step == 1500:
         animation.event_source.stop()
     # plt.savefig(str(step) + '.png')
 
     step += 1
 
 
-# dataFile = 'Data/1in_linear.txt'
-dataFile = 'Data/1in_sine.txt'
+##########################################################################
+
+dataFile = 'Data/1in_linear.txt'
+# dataFile = 'Data/1in_sine.txt'
 # dataFile = 'Data/2in_complex.txt'
 
 file = open(dataFile, 'rt')
@@ -55,6 +79,8 @@ for line in file:
     X_train = np.append(X_train, [float(coordinates[0])], axis=0)
     y_train = np.append(y_train, [float(coordinates[1])], axis=0)
 
+aux = np.column_stack((X_train, y_train))
+
 nn = NeuralNetwork()
 nn.add(4, input_shape=1)
 nn.add(3)
@@ -64,30 +90,16 @@ pso = PSO(nn)
 
 pso.generate_initial_population()
 
-# step = 0
-#
-# while step < 500 and not pso.stop():
-#     # Calculate fitness of each particle
-#     for particle in pso.population:
-#         particle.calculate_fitness(nn, X_train, y_train)
-#
-#     # Choose the particle with the best fitness value of all as gBest for each particle
-#     pso.update_neighborhood_best()
-#
-#     # Update velocity and position for each particle
-#     for particle in pso.population:
-#         particle.update_velocity(pso.importancePBest, pso.importanceGBest)
-#         particle.update_position()
-#
-#     step += 1
-
-####### Generate figure
+############################ GENERATE FIGURE ############################
 
 fig = plt.figure()
-training_data = fig.add_subplot(1, 1, 1)
-predicted_data = fig.add_subplot(1, 1, 1)
+function = fig.add_subplot(1, 2, 1)
+error = fig.add_subplot(1, 2, 2)
 
 step = 0
+min_error = 1.
+time_step = []
+error_historical = []
 
 animation = ani.FuncAnimation(fig, draw_graph, interval=2)
 
