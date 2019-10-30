@@ -1,14 +1,13 @@
 import numpy as np
 import math
+import random
 from neural_network import *
 
 
 class NN_Solution:
 
-    alfa = 1
     vMax_ActFunc = 2
     vMax_WB = 4
-    # TODO: Inertia factor for velocity
 
     def __init__(self, numWeightsBiases, numNeurons):
         self.numNeurons = numNeurons
@@ -48,19 +47,18 @@ class NN_Solution:
             self.pBest = self.position
             self.pBestFitness = self.fitness
 
-    def update_velocity(self, c1, c2):
-        # TODO: Add global best
-        # c1 * u1 * (pBest - position)
-        personalInfluence = np.multiply(c1, np.multiply(np.random.uniform(0, self.alfa, size=self.length),
-                                                        np.subtract(self.pBest, self.position)))
-        # c2 * u2 * (gBest - position)
-        neighborhoodInfluence = np.multiply(c2, np.multiply(np.random.uniform(0, self.alfa, size=self.length),
-                                                            np.subtract(self.gBest, self.position)))
+    def update_velocity(self, alfa, beta, gamma):
+        # TODO: Check if it's a good idea to add global best
+        b = random.uniform(0, beta)
+        c = random.uniform(0, gamma)
+        # b * (pBest - position)
+        personalInfluence = np.multiply(b, np.subtract(self.pBest, self.position))
+        # c * (gBest - position)
+        neighborhoodInfluence = np.multiply(c, np.subtract(self.gBest, self.position))
 
         velVariation = np.add(personalInfluence, neighborhoodInfluence)
 
-        # TODO: Consider inertia
-        self.velocity = np.add(self.velocity, velVariation)
+        self.velocity = np.add(np.multiply(alfa, self.velocity), velVariation)
 
         # Limit velocity if it exceeds vMax
         for i in range(len(self.velocity)):

@@ -6,7 +6,7 @@ import matplotlib.animation as ani
 
 def draw_graph(j):
 
-    global step, nn, pso, aux, min_error
+    global step, nn, pso, aux, min_error, alfa1, alfa2
 
     time_step.append([step])
 
@@ -14,11 +14,16 @@ def draw_graph(j):
         print(f'Step: {step} - Minimum error found so far: {min_error}')
 
     if step > 0:
+
+        inertia_weight = (alfa1 - alfa2) * ((max_steps - step)/max_steps) + alfa2
+
+        # TODO: Check whether to keep this or not
+        np.random.shuffle(aux)
+        X = [elem[0] for elem in aux[:30]]
+        y = [elem[1] for elem in aux[:30]]
+
         # Calculate fitness of each particle
         for particle in pso.population:
-            np.random.shuffle(aux)
-            X = [elem[0] for elem in aux[:30]]
-            y = [elem[1] for elem in aux[:30]]
             particle.calculate_fitness(nn, X, y)
 
         # Choose the particle with the best fitness value of all as gBest for each particle
@@ -26,7 +31,7 @@ def draw_graph(j):
 
         # Update velocity and position for each particle
         for particle in pso.population:
-            particle.update_velocity(pso.importancePBest, pso.importanceGBest)
+            particle.update_velocity(inertia_weight, pso.importancePBest, pso.importanceGBest)
             particle.update_position()
 
     global_best = pso.find_global_best()
@@ -55,9 +60,9 @@ def draw_graph(j):
     error.set_xlabel('Num. of iterations')
     error.set_ylabel('Error')
     error.set_ylim([0, .225])
-    error.plot(time_step, error_historical, color='red')
+    error.plot(time_step, error_historical, color='red', linewidth=.7)
 
-    if step == 1500:
+    if step == max_steps:
         animation.event_source.stop()
     # plt.savefig(str(step) + '.png')
 
@@ -97,9 +102,13 @@ function = fig.add_subplot(1, 2, 1)
 error = fig.add_subplot(1, 2, 2)
 
 step = 0
+max_steps = 750
 min_error = 1.
 time_step = []
 error_historical = []
+
+alfa1 = .9
+alfa2 = .4
 
 animation = ani.FuncAnimation(fig, draw_graph, interval=2)
 
