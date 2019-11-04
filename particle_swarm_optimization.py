@@ -61,7 +61,3 @@ class PSO:
                 gBest_fitness = self.population[particle_idx].pBestFitness
 
         return self.population[gBest_idx]
-
-    def stop(self):
-        # TODO: Compare all gBest and consider whether the solution is good enough or not
-        return False
