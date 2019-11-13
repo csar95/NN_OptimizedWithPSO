@@ -26,15 +26,36 @@ class PSO:
             particle = NN_Solution(self.numWeightsBiases, self.numNeurons)
             self.population = np.append(self.population, [particle], axis=0)
 
-    def update_neighborhood_best(self):
-        for particle_idx in range(self.populationSize):
+    # Based on a random selection of neighbors
+    def update_neighborhood_best_random(self):
+        for particleIdx in range(self.populationSize):
+            # neighborsIndeces = [(index % self.populationSize, float('inf'))
+            #                     for index in range(particleIdx + 1, particleIdx + 1 + self.neighborhood)]
+
+            particleIndeces = [i for i in range(self.populationSize)]
+            particleIndeces.remove(particleIdx)
+
+            neighborsIndeces = [(particleIndeces.pop(random.randint(0, len(particleIndeces)-1)), float('inf'))
+                                for _ in range(self.neighborhood)]
+
+            # Among those neighbor particles update our particle's gBest with the pBest of the fittest
+            fittestNeighbor = (-1, float('inf'))  # (index, pbest)
+            for neighbor in neighborsIndeces:
+                if self.population[neighbor[0]].pBestFitness < fittestNeighbor[1]:
+                    fittestNeighbor = (neighbor[0], self.population[neighbor[0]].pBestFitness)
+            self.population[particleIdx].gBest = self.population[fittestNeighbor[0]].pBest
+            self.population[particleIdx].gBestFitness = self.population[fittestNeighbor[0]].pBestFitness
+
+    # Based on a local neighborhood
+    def update_neighborhood_best_local(self):
+        for particleIdx in range(self.populationSize):
             # Choose neighbors based on euclidean distance
-            neighborsIndeces = [(index, 999999999.9) for index in range(self.neighborhood)]
+            neighborsIndeces = [(index, float('inf')) for index in range(self.neighborhood)]
 
             # Calculate distance from one particle to the others
             for j in range(self.populationSize):
-                if particle_idx != j:
-                    distance = self.population[particle_idx].euclidean_distance(self.population[j])
+                if particleIdx != j:
+                    distance = self.population[particleIdx].euclidean_distance(self.population[j])
                     for n in range(len(neighborsIndeces)):
 
                         # If distance is less than any of the particles in neighborsIndeces replace index and continue
@@ -44,16 +65,16 @@ class PSO:
                             break
 
             # Among those neighbor particles update our particle's gBest with the pBest of the fittest
-            fittestNeighbor = (-1, 999999999.9)  # (index, pbest)
+            fittestNeighbor = (-1, float('inf'))  # (index, pbest)
             for neighbor in neighborsIndeces:
                 if self.population[neighbor[0]].pBestFitness < fittestNeighbor[1]:
                     fittestNeighbor = (neighbor[0], self.population[neighbor[0]].pBestFitness)
-            self.population[particle_idx].gBest = self.population[fittestNeighbor[0]].pBest
-            self.population[particle_idx].gBestFitness = self.population[fittestNeighbor[0]].pBestFitness
+            self.population[particleIdx].gBest = self.population[fittestNeighbor[0]].pBest
+            self.population[particleIdx].gBestFitness = self.population[fittestNeighbor[0]].pBestFitness
 
     def find_global_best(self):
         gBest_idx = -1
-        gBest_fitness = 999999999.9
+        gBest_fitness = float('inf')
 
         for particle_idx in range(self.populationSize):
             if self.population[particle_idx].pBestFitness < gBest_fitness:

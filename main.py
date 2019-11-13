@@ -17,6 +17,7 @@ def draw_graph(j):
     inertia_weight = (alfa1 - alfa2) * ((max_steps - step)/max_steps) + alfa2
 
     # Testing how good the parameters are with part of the data after randomizing it
+    # This helps to discover new configurations for the NN
     np.random.shuffle(aux)
     X = np.array([np.array(elem[:(dim-1)]) for elem in aux[:30]])
     y = np.array([elem[dim-1] for elem in aux[:30]])
@@ -26,8 +27,11 @@ def draw_graph(j):
         particle.calculate_fitness(nn, X, y)
 
     # Choose the particle with the best fitness value of all as gBest for each particle
-    # This helps to discover new configurations for the NN
-    pso.update_neighborhood_best()
+    # (Reference slides or idea taken from https://www.sciencedirect.com/science/article/pii/S0020025517306485)
+    if step < max_steps/3:
+        pso.update_neighborhood_best_random()  # Exploration
+    else:
+        pso.update_neighborhood_best_local()  # Exploitation
 
     # Update velocity and position for each particle
     for particle in pso.population:
@@ -78,10 +82,10 @@ def draw_graph(j):
 ########################## ALG. INITIALIZATION ##########################
 
 # dataFile = 'Data/1in_cubic.txt'
-# dataFile = 'Data/1in_linear.txt'
+dataFile = 'Data/1in_linear.txt'
 # dataFile = 'Data/1in_sine.txt'
 # dataFile = 'Data/1in_tanh.txt'
-dataFile = 'Data/2in_complex.txt'
+# dataFile = 'Data/2in_complex.txt'
 # dataFile = 'Data/2in_xor.txt'
 
 file = open(dataFile, 'rt')

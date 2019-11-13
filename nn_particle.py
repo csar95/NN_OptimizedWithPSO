@@ -48,7 +48,6 @@ class NN_Solution:
             self.pBestFitness = self.fitness
 
     def update_velocity(self, alfa, beta, gamma):
-        # TODO: Check if it's a good idea to add global best
         b = random.uniform(0, beta)
         c = random.uniform(0, gamma)
         # b * (pBest - position)
