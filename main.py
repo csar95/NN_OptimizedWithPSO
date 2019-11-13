@@ -5,7 +5,6 @@ import matplotlib.animation as ani
 from mpl_toolkits.mplot3d import Axes3D
 
 
-
 def draw_graph(j):
 
     global step, nn, pso, dim, aux, min_error, alfa1, alfa2
@@ -17,16 +16,17 @@ def draw_graph(j):
 
     inertia_weight = (alfa1 - alfa2) * ((max_steps - step)/max_steps) + alfa2
 
-    # TODO: Check whether to keep this or not
+    # Testing how good the parameters are with part of the data after randomizing it
     np.random.shuffle(aux)
     X = np.array([np.array(elem[:(dim-1)]) for elem in aux[:30]])
-    y = np.array([elem[1] for elem in aux[:30]])
+    y = np.array([elem[dim-1] for elem in aux[:30]])
 
     # Calculate fitness of each particle
     for particle in pso.population:
         particle.calculate_fitness(nn, X, y)
 
     # Choose the particle with the best fitness value of all as gBest for each particle
+    # This helps to discover new configurations for the NN
     pso.update_neighborhood_best()
 
     # Update velocity and position for each particle
@@ -77,11 +77,11 @@ def draw_graph(j):
 
 ########################## ALG. INITIALIZATION ##########################
 
-dataFile = 'Data/1in_cubic.txt'
+# dataFile = 'Data/1in_cubic.txt'
 # dataFile = 'Data/1in_linear.txt'
 # dataFile = 'Data/1in_sine.txt'
 # dataFile = 'Data/1in_tanh.txt'
-# dataFile = 'Data/2in_complex.txt'
+dataFile = 'Data/2in_complex.txt'
 # dataFile = 'Data/2in_xor.txt'
 
 file = open(dataFile, 'rt')

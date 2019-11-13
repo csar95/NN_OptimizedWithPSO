@@ -15,7 +15,7 @@ class NeuralNetwork:
         if not self.layers_weights:
             weights = np.random.uniform(-1, 1, size=(neurons, input_shape))
         else:
-            #                                               Number of rows in the previous layer
+            # Number of rows in the previous layer
             weights = np.random.uniform(-1, 1, size=(neurons, self.layers_weights[-1][:, 0].size))
         bias = np.random.uniform(-1, 1, size=(neurons, 1))
         activation = np.random.randint(1, 6, size=(neurons, 1))
