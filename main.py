@@ -3,12 +3,12 @@ from neural_network import *
 import matplotlib.pyplot as plt
 import matplotlib.animation as ani
 from mpl_toolkits.mplot3d import Axes3D
+import time
 
 
 def draw_graph(j):
 
-    global step, nn, pso, dim, aux, min_error, alfa1, alfa2
-
+    global step, nn, pso, dim, aux, min_error, alfa1, alfa2, time1
     time_step.append([step])
 
     if step % 50 == 0:
@@ -72,8 +72,13 @@ def draw_graph(j):
     error.set_ylim([0, .225])
     error.plot(time_step, error_historical, color='red', linewidth=.7)
 
+    if step == 0:
+        time1 = time.time()
+
     if step == max_steps:
         animation.event_source.stop()
+        time2 = time.time()
+        print(time2 - time1)
     # plt.savefig(str(step) + '.png')
 
     step += 1
@@ -102,6 +107,7 @@ for line in file:
 
 aux = np.column_stack((X_train, y_train))
 
+# TODO: try from 1 to 5
 nn = NeuralNetwork()
 nn.add(4, input_shape=(dim-1))
 nn.add(3)
@@ -125,6 +131,8 @@ error_historical = []
 
 alfa1 = .9
 alfa2 = .4
+
+time1 = .0
 
 animation = ani.FuncAnimation(fig, draw_graph, interval=2)
 
