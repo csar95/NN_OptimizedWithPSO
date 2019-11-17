@@ -5,14 +5,14 @@ import numpy as np
 class PSO:
 
     # TODO: try from 10 to 60
-    populationSize = 20
+    populationSize = 30
     # TODO: try from 2 to 10
-    neighborhood = 3
+    neighborhood = 4
     # Sum should be equal 4 and not critical for PSO’s convergence and alleviation of local minimum
     importancePBest = 2.5  # Self confidence factor
     importanceGBest = 1.5  # Swarm confidence factor
 
-    def __init__(self, nn, populationSize=20, neighborhood=3):
+    def __init__(self, nn, populationSize=30, neighborhood=4):
         self.populationSize = populationSize
         self.neighborhood = neighborhood
 

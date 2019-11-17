@@ -6,8 +6,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import time
 
 dataset = ['Data/1in_cubic.txt', 'Data/1in_linear.txt', 'Data/1in_sine.txt', 'Data/1in_tanh.txt', 'Data/2in_complex.txt', 'Data/2in_xor.txt']
-populationSize = [10, 20, 30, 40, 50, 60]
-neighborhood = [2, 3, 4, 5, 6, 7]
+populationSize = [10, 20, 30, 40, 50, 60, 100]
+neighborhood = [2, 3, 4, 5, 6, 7, 10]
 layers = [1, 2, 3, 4]
 
 popSizeError = []
@@ -21,7 +21,7 @@ layersTime = []
 
 ########################## ALG. INITIALIZATION ##########################
 
-dataFile = 'Data/1in_linear.txt'
+dataFile = 'Data/1in_tanh.txt'
 
 file = open(dataFile, 'rt')
 
