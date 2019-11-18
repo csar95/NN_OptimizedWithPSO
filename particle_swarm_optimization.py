@@ -12,9 +12,12 @@ class PSO:
     importancePBest = 2.5  # Self confidence factor
     importanceGBest = 1.5  # Swarm confidence factor
 
-    def __init__(self, nn, populationSize=30, neighborhood=4):
+    def __init__(self, nn, populationSize=30, neighborhood=4, importancePBest=2.5):
         self.populationSize = populationSize
         self.neighborhood = neighborhood
+
+        self.importancePBest = importancePBest
+        self.importanceGBest = 4 - self.importancePBest
 
         self.numWeightsBiases = 0
         self.numNeurons = 0
