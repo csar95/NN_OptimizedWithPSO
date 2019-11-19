@@ -6,14 +6,10 @@ from mpl_toolkits.mplot3d import Axes3D
 import time
 
 dataset = ['Data/1in_cubic.txt', 'Data/1in_linear.txt', 'Data/1in_sine.txt', 'Data/1in_tanh.txt', 'Data/2in_complex.txt', 'Data/2in_xor.txt']
-# populationSize = [10, 20, 30, 40, 50, 60, 100]
-# neighborhood = [2, 3, 4, 5, 6, 7, 10]
-# layers = [0, 1, 2, 3, 4]
-populationSize = []
-neighborhood = []
-# importancePBest = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4]
-importancePBest = []
-layers = [10]
+populationSize = [10, 20, 30, 40, 50, 60, 100]
+neighborhood = [2, 3, 4, 5, 6, 7, 10]
+layers = [0, 1, 2, 3, 4, 10, 20]
+importancePBest = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4]
 
 popSizeError = []
 popSizeTime = []
@@ -29,7 +25,7 @@ pBestTime = []
 
 ########################## ALG. INITIALIZATION ##########################
 
-dataFile = 'Data/2in_complex.txt'
+dataFile = 'Data/1in_linear.txt'
 
 file = open(dataFile, 'rt')
 

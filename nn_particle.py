@@ -61,7 +61,6 @@ class NN_Solution:
 
         # Limit velocity if it exceeds vMax
         for i in range(len(self.velocity)):
-            # TODO: Consider different vMax for the biases
             # Weights and biases
             if i < self.length - self.numNeurons:
                 if self.velocity[i] > self.vMax_WB:
