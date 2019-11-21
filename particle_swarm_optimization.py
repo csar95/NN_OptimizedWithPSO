@@ -4,20 +4,13 @@ import numpy as np
 
 class PSO:
 
-    # TODO: try from 10 to 60
-    populationSize = 30
-    # TODO: try from 2 to 10
-    neighborhood = 4
-    # Sum should be equal 4 and not critical for PSO’s convergence and alleviation of local minimum
-    importancePBest = 2.5  # Self confidence factor
-    importanceGBest = 1.5  # Swarm confidence factor
-
     def __init__(self, nn, populationSize=30, neighborhood=4, importancePBest=2.5):
         self.populationSize = populationSize
         self.neighborhood = neighborhood
 
-        self.importancePBest = importancePBest
-        self.importanceGBest = 4 - self.importancePBest
+        # Sum should be equal 4 and not critical for PSO’s convergence and alleviation of local minimum
+        self.importancePBest = importancePBest  # Self confidence factor
+        self.importanceGBest = 4 - self.importancePBest  # Swarm confidence factor
 
         self.numWeightsBiases = 0
         self.numNeurons = 0
