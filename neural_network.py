@@ -89,4 +89,4 @@ class NeuralNetwork:
 
     @staticmethod
     def gaussian(x):
-        return np.exp(-(x**2))
+        return np.exp(-(x**2)/2)

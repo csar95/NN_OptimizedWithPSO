@@ -107,7 +107,6 @@ for line in file:
 
 aux = np.column_stack((X_train, y_train))
 
-# TODO: try from 1 to 5
 nn = NeuralNetwork()
 nn.add(4, input_shape=(dim-1))
 nn.add(3)
