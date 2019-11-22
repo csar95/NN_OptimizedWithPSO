@@ -99,10 +99,11 @@ aux = np.column_stack((X_train, y_train))
 
 nn = NeuralNetwork()
 nn.add(4, input_shape=(dim-1))
-nn.add(3)
+for _ in range(20):
+    nn.add(3)
 nn.add(1)
 
-pso = PSO(nn)
+pso = PSO(nn, populationSize=40, importancePBest=3)
 
 pso.generate_initial_population()
 
