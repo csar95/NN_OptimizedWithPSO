@@ -119,6 +119,9 @@ errorHistorical = []
 alpha1 = .9
 alpha2 = .4
 
+# The PSO algorithm is run inside the draw_graph function which plots two graphs.
+# One with the desired output function and the best solution ever found by the swarm, and another showing the evolution
+# of the mean square error (MSE).
 animation = ani.FuncAnimation(fig, draw_graph, interval=2)
 
 plt.xticks([])
