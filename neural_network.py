@@ -5,17 +5,20 @@ class NeuralNetwork:
 
     # activation_functions = {1: 'null', 2: 'sigmoid', 3: 'hyperbolic_tangent', 4: 'cosine', 5: 'gaussian'}
 
+    # This arrays will contain the arrays for each layer, thus they represents matrices
     def __init__(self):
         self.layers_weights = []
         self.layers_biases = []
         self.layers_activation = []
 
-    # activation can be: {null, sigmoid, hyperbolic_tangent, cosine, gaussian}
+    # Weights and biases are initialized random in range (-1, 1), activation functions are integers in range (1, 5)
     def add(self, neurons, input_shape=None):
+        # If this is the first layer added
         if not self.layers_weights:
             weights = np.random.uniform(-1, 1, size=(neurons, input_shape))
+        # For every other layer
         else:
-            # Number of rows in the previous layer
+            #                                                 Number of rows in the previous layer
             weights = np.random.uniform(-1, 1, size=(neurons, self.layers_weights[-1][:, 0].size))
         bias = np.random.uniform(-1, 1, size=(neurons, 1))
         activation = np.random.randint(1, 6, size=(neurons, 1))
@@ -23,6 +26,7 @@ class NeuralNetwork:
         self.layers_biases.append(bias)
         self.layers_activation.append(activation)
 
+    # It transposes an array of values into the parameters of the neural network
     def set_parameters(self, pso_array):
         # Sets the weights for each neuron
         temp = list(pso_array.copy())
@@ -50,12 +54,13 @@ class NeuralNetwork:
             # Calculating the layer outputs
             layer_outputs = np.dot(self.layers_weights[i], layer_inputs)
             layer_outputs = np.add(layer_outputs, self.layers_biases[i])
-            # Activation function
+            # Applying an activation function
             self.map(self.layers_activation[i], layer_outputs)
             # This layer's outputs will be the inputs for the next layer
             layer_inputs = layer_outputs
         return layer_outputs
 
+    # This method maps activation functions numbers into the actual functions
     def map(self, activations, inputs):
         for i in range(len(activations)):
             if activations[i] == 1:
