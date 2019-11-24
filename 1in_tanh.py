@@ -80,12 +80,7 @@ def draw_graph(j):
 
 # ------------------------------ ALG. INITIALIZATION ------------------------------ #
 
-# dataFile = 'Data/1in_cubic.txt'
-dataFile = 'Data/1in_linear.txt'
-# dataFile = 'Data/1in_sine.txt'
-# dataFile = 'Data/1in_tanh.txt'
-# dataFile = 'Data/2in_complex.txt'
-# dataFile = 'Data/2in_xor.txt'
+dataFile = 'Data/1in_tanh.txt'
 
 file = open(dataFile, 'rt')
 
