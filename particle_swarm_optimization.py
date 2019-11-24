@@ -6,80 +6,84 @@ class PSO:
 
     def __init__(self, nn, populationSize=30, neighborhood=4, importancePBest=2.5):
         self.populationSize = populationSize
-        self.neighborhood = neighborhood
+        self.neighborhood = neighborhood  # Number of informants of a particle
 
-        # Sum should be equal 4 and not critical for PSO’s convergence and alleviation of local minimum
+        # Sum the cognitive (pBest) and social (gBest) components should be equal 4
         self.importancePBest = importancePBest  # Self confidence factor
-        self.importanceGBest = 4 - self.importancePBest  # Swarm confidence factor
+        self.importanceGBest = 4 - self.importancePBest  # Neighbourhood confidence factor
 
-        self.numWeightsBiases = 0
-        self.numNeurons = 0
+        self.numWeightsBiases = 0  # Number of weights components represented in a particle's position
+        self.numNeurons = 0  # Number of neurons in the NN
 
         for matrix in nn.layers_weights:
             self.numWeightsBiases += (matrix.shape[0] * (matrix.shape[1] + 1))
             self.numNeurons += matrix.shape[0]
 
-        self.population = np.array([], dtype=object)  # Initialize empty population
+        self.population = np.array([], dtype=object)  # Initialize empty population (swarm)
 
+    # Initialize particles in the swarm at random
     def generate_initial_population(self):
-        # Initialize particles randomly
         for _ in range(self.populationSize):
             particle = NN_Solution(self.numWeightsBiases, self.numNeurons)
             self.population = np.append(self.population, [particle], axis=0)
 
-    # Based on a random selection of neighbors
+    # For each particle in the swarm find its informants based on a random selection.
+    # Then, calculates the best position ever found by those informants (gBest)
     def update_neighborhood_best_random(self):
         for particleIdx in range(self.populationSize):
-            # neighborsIndeces = [(index % self.populationSize, float('inf'))
-            #                     for index in range(particleIdx + 1, particleIdx + 1 + self.neighborhood)]
-
-            particleIndeces = [i for i in range(self.populationSize)]
-            particleIndeces.remove(particleIdx)
-
-            neighborsIndeces = [(particleIndeces.pop(random.randint(0, len(particleIndeces)-1)), float('inf'))
+            
+            particleIndexes = [i for i in range(self.populationSize)]
+            particleIndexes.remove(particleIdx)
+            
+            # Select the index of particles in the swarm at random. These'll be the informants of particle 'particleIdx'
+            neighboursIndexes = [(particleIndexes.pop(random.randint(0, len(particleIndexes)-1)), float('inf'))
                                 for _ in range(self.neighborhood)]
 
-            # Among those neighbor particles update our particle's gBest with the pBest of the fittest
-            fittestNeighbor = (-1, float('inf'))  # (index, pbest)
-            for neighbor in neighborsIndeces:
+            # Among those neighbour particles update the particle's gBest with the pBest of the fittest neighbour
+            fittestNeighbor = (-1, float('inf'))  # Format: (neighbourIndex, pBestFitness)
+            for neighbor in neighboursIndexes:
                 if self.population[neighbor[0]].pBestFitness < fittestNeighbor[1]:
                     fittestNeighbor = (neighbor[0], self.population[neighbor[0]].pBestFitness)
+            
             self.population[particleIdx].gBest = self.population[fittestNeighbor[0]].pBest
             self.population[particleIdx].gBestFitness = self.population[fittestNeighbor[0]].pBestFitness
 
-    # Based on a local neighborhood
+    # For each particle in the swarm find its informants based on the euclidean distance (Local neighborhood).
+    # Then, calculates the best position ever found by those informants (gBest)
     def update_neighborhood_best_local(self):
         for particleIdx in range(self.populationSize):
-            # Choose neighbors based on euclidean distance
-            neighborsIndeces = [(index, float('inf')) for index in range(self.neighborhood)]
 
-            # Calculate distance from one particle to the others
+            neighboursIndexes = [(index, float('inf')) for index in range(self.neighborhood)]
+
+            # Calculate euclidean distance from one particle to the others
             for j in range(self.populationSize):
                 if particleIdx != j:
                     distance = self.population[particleIdx].euclidean_distance(self.population[j])
-                    for n in range(len(neighborsIndeces)):
+                    for n in range(len(neighboursIndexes)):
 
-                        # If distance is less than any of the particles in neighborsIndeces replace index and continue
-                        if distance < neighborsIndeces[n][1]:
-                            neighborsIndeces.insert(n, (j, distance))  # FILO
-                            neighborsIndeces.pop()
+                        # If distance is less than any of the particles in neighboursIndexes replace index and continue
+                        if distance < neighboursIndexes[n][1]:
+                            neighboursIndexes.insert(n, (j, distance))  # FILO
+                            neighboursIndexes.pop()
                             break
 
-            # Among those neighbor particles update our particle's gBest with the pBest of the fittest
-            fittestNeighbor = (-1, float('inf'))  # (index, pbest)
-            for neighbor in neighborsIndeces:
+            # Among those neighbour particles update the particle's gBest with the pBest of the fittest neighbour
+            fittestNeighbor = (-1, float('inf'))  # Format: (neighbourIndex, pBestFitness)
+            for neighbor in neighboursIndexes:
                 if self.population[neighbor[0]].pBestFitness < fittestNeighbor[1]:
                     fittestNeighbor = (neighbor[0], self.population[neighbor[0]].pBestFitness)
+
             self.population[particleIdx].gBest = self.population[fittestNeighbor[0]].pBest
             self.population[particleIdx].gBestFitness = self.population[fittestNeighbor[0]].pBestFitness
 
+    # Find the position found by all the particles in the swarm. Used for plotting the graph
     def find_global_best(self):
-        gBest_idx = -1
-        gBest_fitness = float('inf')
+        gBestIdx = -1
+        gBestFitness = float('inf')
 
-        for particle_idx in range(self.populationSize):
-            if self.population[particle_idx].pBestFitness < gBest_fitness:
-                gBest_idx = particle_idx
-                gBest_fitness = self.population[particle_idx].pBestFitness
+        for particleIdx in range(self.populationSize):
+            if self.population[particleIdx].pBestFitness < gBestFitness:
+                gBestIdx = particleIdx
+                gBestFitness = self.population[particleIdx].pBestFitness
 
-        return self.population[gBest_idx]
+        return self.population[gBestIdx]

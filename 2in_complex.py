@@ -7,16 +7,16 @@ from mpl_toolkits.mplot3d import Axes3D
 
 def draw_graph(j):
 
-    global step, nn, pso, dim, aux, min_error, alfa1, alfa2
-
+    global step, nn, pso, dim, aux, minError, alpha1, alpha2
     time_step.append([step])
 
     if step % 50 == 0:
-        print(f'Step: {step} - Minimum error found so far: {min_error}')
+        print(f'Step: {step} - Minimum error found so far: {minError}')
 
-    inertia_weight = (alfa1 - alfa2) * ((max_steps - step)/max_steps) + alfa2
+    # Inertia decreases linearly between alpha1 and alpha2
+    inertiaWeight = (alpha1 - alpha2) * ((max_steps - step) / max_steps) + alpha2
 
-    # Testing how good the parameters are with part of the data after randomizing it
+    # Randomize data set and choose a group of 30 pairs for training.
     # This helps to discover new configurations for the NN
     np.random.shuffle(aux)
     X = np.array([np.array(elem[:(dim-1)]) for elem in aux[:30]])
@@ -27,7 +27,6 @@ def draw_graph(j):
         particle.calculate_fitness(nn, X, y)
 
     # Choose the particle with the best fitness value of all as gBest for each particle
-    # (Reference slides or idea taken from https://www.sciencedirect.com/science/article/pii/S0020025517306485)
     if step < max_steps/3:
         pso.update_neighborhood_best_random()  # Exploration
     else:
@@ -35,16 +34,16 @@ def draw_graph(j):
 
     # Update velocity and position for each particle
     for particle in pso.population:
-        particle.update_velocity(inertia_weight, pso.importancePBest, pso.importanceGBest)
+        particle.update_velocity(inertiaWeight, pso.importancePBest, pso.importanceGBest)
         particle.update_position()
 
-    global_best = pso.find_global_best()
+    globalBest = pso.find_global_best()
 
-    best_error = global_best.pBestFitness
-    error_historical.append(best_error)
-    min_error = best_error if best_error < min_error else min_error
+    bestError = globalBest.pBestFitness
+    errorHistorical.append(bestError)
+    minError = bestError if bestError < minError else minError
 
-    nn.set_parameters(global_best.pBest)
+    nn.set_parameters(globalBest.pBest)
     y_preds = np.array([])
     for x in X_train:
         y_pred = nn.feed_forward(np.array(x))[0]
@@ -70,16 +69,16 @@ def draw_graph(j):
     error.set_xlabel('Num. of iterations')
     error.set_ylabel('Error')
     error.set_ylim([0, .225])
-    error.plot(time_step, error_historical, color='red', linewidth=.7)
+    error.plot(time_step, errorHistorical, color='red', linewidth=.7)
 
     if step == max_steps:
         animation.event_source.stop()
-    # plt.savefig(str(step) + '.png')
+        # plt.savefig(str(step) + '.png')
 
     step += 1
 
 
-########################## ALG. INITIALIZATION ##########################
+# ------------------------------ ALG. INITIALIZATION ------------------------------ #
 
 dataFile = 'Data/2in_complex.txt'
 
@@ -104,10 +103,9 @@ for _ in range(20):
 nn.add(1)
 
 pso = PSO(nn, populationSize=40, importancePBest=3)
-
 pso.generate_initial_population()
 
-############################ GENERATE FIGURE ############################
+# -------------------------------- GENERATE FIGURE -------------------------------- #
 
 fig = plt.figure()
 function = fig.add_subplot(1, 2, 1, projection='3d') if dim == 3 else fig.add_subplot(1, 2, 1)
@@ -115,16 +113,16 @@ error = fig.add_subplot(1, 2, 2)
 
 step = 0
 max_steps = 750
-min_error = 1.
+minError = 1.
 time_step = []
-error_historical = []
+errorHistorical = []
 
-alfa1 = .9
-alfa2 = .4
+# Maximum and minimum values for the inertia (decreases linearly)
+alpha1 = .9
+alpha2 = .4
 
 animation = ani.FuncAnimation(fig, draw_graph, interval=2)
 
 plt.xticks([])
 plt.yticks([])
 plt.show()
-

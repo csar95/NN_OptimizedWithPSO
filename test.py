@@ -31,8 +31,8 @@ for dataFile in datasets:
         y_train = np.append(y_train, [float(coordinates[dim-1])])
 
     max_steps = 750
-    alfa1 = .9
-    alfa2 = .4
+    alpha1 = .9
+    alpha2 = .4
 
     #########################################################################
 
@@ -53,10 +53,10 @@ for dataFile in datasets:
             pso = PSO(nn, populationSize=popSize)
             pso.generate_initial_population()
 
-            min_error = 1.
+            minError = 1.
 
             for step in range(max_steps):
-                inertia_weight = (alfa1 - alfa2) * ((max_steps - step) / max_steps) + alfa2
+                inertia_weight = (alpha1 - alpha2) * ((max_steps - step) / max_steps) + alpha2
 
                 # Testing how good the parameters are with part of the data after randomizing it
                 # This helps to discover new configurations for the NN
@@ -83,10 +83,10 @@ for dataFile in datasets:
                 global_best = pso.find_global_best()
 
                 best_error = global_best.pBestFitness
-                min_error = best_error if best_error < min_error else min_error
+                minError = best_error if best_error < minError else minError
 
-            print(f'Episode: {i} | Minimum error: {min_error}')
-            avgError += min_error
+            print(f'Episode: {i} | Minimum error: {minError}')
+            avgError += minError
 
         avgError /= 10
         popSizeError.append(avgError)
@@ -111,10 +111,10 @@ for dataFile in datasets:
             pso = PSO(nn, neighborhood=n)
             pso.generate_initial_population()
 
-            min_error = 1.
+            minError = 1.
 
             for step in range(max_steps):
-                inertia_weight = (alfa1 - alfa2) * ((max_steps - step) / max_steps) + alfa2
+                inertia_weight = (alpha1 - alpha2) * ((max_steps - step) / max_steps) + alpha2
 
                 # Testing how good the parameters are with part of the data after randomizing it
                 # This helps to discover new configurations for the NN
@@ -141,10 +141,10 @@ for dataFile in datasets:
                 global_best = pso.find_global_best()
 
                 best_error = global_best.pBestFitness
-                min_error = best_error if best_error < min_error else min_error
+                minError = best_error if best_error < minError else minError
 
-            print(f'Episode: {i} | Minimum error: {min_error}')
-            avgError += min_error
+            print(f'Episode: {i} | Minimum error: {minError}')
+            avgError += minError
 
         avgError /= 10
         neighborhoodError.append(avgError)
@@ -170,10 +170,10 @@ for dataFile in datasets:
             pso = PSO(nn)
             pso.generate_initial_population()
 
-            min_error = 1.
+            minError = 1.
 
             for step in range(max_steps):
-                inertia_weight = (alfa1 - alfa2) * ((max_steps - step) / max_steps) + alfa2
+                inertia_weight = (alpha1 - alpha2) * ((max_steps - step) / max_steps) + alpha2
 
                 # Testing how good the parameters are with part of the data after randomizing it
                 # This helps to discover new configurations for the NN
@@ -200,10 +200,10 @@ for dataFile in datasets:
                 global_best = pso.find_global_best()
 
                 best_error = global_best.pBestFitness
-                min_error = best_error if best_error < min_error else min_error
+                minError = best_error if best_error < minError else minError
 
-            print(f'Episode: {i} | Minimum error: {min_error}')
-            avgError += min_error
+            print(f'Episode: {i} | Minimum error: {minError}')
+            avgError += minError
 
         avgError /= 10
         layersError.append(avgError)
@@ -226,10 +226,10 @@ for dataFile in datasets:
             pso = PSO(nn, importancePBest=c1)
             pso.generate_initial_population()
 
-            min_error = 1.
+            minError = 1.
 
             for step in range(max_steps):
-                inertia_weight = (alfa1 - alfa2) * ((max_steps - step) / max_steps) + alfa2
+                inertia_weight = (alpha1 - alpha2) * ((max_steps - step) / max_steps) + alpha2
 
                 # Testing how good the parameters are with part of the data after randomizing it
                 # This helps to discover new configurations for the NN
@@ -256,10 +256,10 @@ for dataFile in datasets:
                 global_best = pso.find_global_best()
 
                 best_error = global_best.pBestFitness
-                min_error = best_error if best_error < min_error else min_error
+                minError = best_error if best_error < minError else minError
 
-            print(f'Episode: {i} | Minimum error: {min_error}')
-            avgError += min_error
+            print(f'Episode: {i} | Minimum error: {minError}')
+            avgError += minError
 
         avgError /= 10
         pBestError.append(avgError)
