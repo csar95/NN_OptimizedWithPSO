@@ -1,5 +1,8 @@
 # NN_OptimizedWithPSO
 
+This project is for the course Biologically Inspired Computation and it is developed by César Gutiérrez and Marco Casadio.
+We developed a Neural Network library from scratch along with the Particle Swarm Optimization (PSO) algorithm.
+
 - The main.py file can run any function. Select it commenting lines 83-88.
 - The files [1in_cubic.py, 1in_linear.py, 1in_sine.py, 1in_tanh.py, 2in_complex.py, 2in_xor.py] each run the respective function with the hyperparameters that gave the best results during testing.
 - The PSO algorithm is run inside the draw_graph function for 750 iterations.
